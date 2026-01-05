@@ -1,10 +1,37 @@
+export type YouTubeView =
+  | 'home'
+  | 'subscriptions'
+  | 'watchLater'
+  | 'playlists'
+  | 'search'
+  | 'channel'
+  | 'suggestions';
+
+export interface ViewSettings {
+  home: boolean;
+  subscriptions: boolean;
+  watchLater: boolean;
+  playlists: boolean;
+  search: boolean;
+  channel: boolean;
+  suggestions: boolean;
+}
+
 export interface Settings {
-  hideEnabled: boolean;
+  viewSettings: ViewSettings;
   watchThreshold: number; // 0-100 percentage
 }
 
 export const DEFAULT_SETTINGS: Settings = {
-  hideEnabled: true,
+  viewSettings: {
+    home: false,
+    subscriptions: false,
+    watchLater: false,
+    playlists: false,
+    search: false,
+    channel: false,
+    suggestions: false,
+  },
   watchThreshold: 50,
 };
 
