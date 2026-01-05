@@ -1,29 +1,29 @@
-import { useEffect, useState } from 'react';
-import type { Settings, ViewSettings } from './types';
-import { DEFAULT_SETTINGS } from './types';
-import { getSettings, saveSettings } from './storage';
-import { Switch } from './components/Switch';
+import { useEffect, useState } from "react";
+import type { Settings, ViewSettings } from "./types";
+import { DEFAULT_SETTINGS } from "./types";
+import { getSettings, saveSettings } from "./storage";
+import { Switch } from "./components/Switch";
 
 // View labels for display in the UI
 const VIEW_LABELS: Record<keyof ViewSettings, string> = {
-  home: 'Home',
-  subscriptions: 'Subscriptions',
-  watchLater: 'Watch Later',
-  playlists: 'Playlists',
-  search: 'Search Results',
-  channel: 'Channel Pages',
-  suggestions: 'Suggestions',
+  home: "Home",
+  subscriptions: "Subscriptions",
+  watchLater: "Watch Later",
+  playlists: "Playlists",
+  search: "Search Results",
+  channel: "Channel Pages",
+  suggestions: "Suggestions",
 };
 
 // Order of views in the UI
 const VIEW_ORDER: (keyof ViewSettings)[] = [
-  'home',
-  'subscriptions',
-  'watchLater',
-  'playlists',
-  'search',
-  'channel',
-  'suggestions',
+  "home",
+  "subscriptions",
+  "watchLater",
+  "playlists",
+  "search",
+  "channel",
+  "suggestions",
 ];
 
 function App() {
@@ -59,7 +59,10 @@ function App() {
       channel: true,
       suggestions: true,
     };
-    const newSettings: Settings = { ...settings, viewSettings: newViewSettings };
+    const newSettings: Settings = {
+      ...settings,
+      viewSettings: newViewSettings,
+    };
     setSettings(newSettings);
     await saveSettings(newSettings);
   };
@@ -74,12 +77,17 @@ function App() {
       channel: false,
       suggestions: false,
     };
-    const newSettings: Settings = { ...settings, viewSettings: newViewSettings };
+    const newSettings: Settings = {
+      ...settings,
+      viewSettings: newViewSettings,
+    };
     setSettings(newSettings);
     await saveSettings(newSettings);
   };
 
-  const handleThresholdChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleThresholdChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const newSettings: Settings = {
       ...settings,
       watchThreshold: parseInt(e.target.value, 10),

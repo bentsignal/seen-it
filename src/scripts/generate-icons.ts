@@ -1,8 +1,8 @@
 // Generate PNG icons from SVG
 // Run with: bun scripts/generate-icons.ts
 
-import sharp from 'sharp';
-import { mkdirSync } from 'fs';
+import sharp from "sharp";
+import { mkdirSync } from "fs";
 
 const sizes = [16, 32, 48, 128];
 
@@ -15,17 +15,15 @@ function createSvgIcon(size: number): Buffer {
 }
 
 async function generateIcons() {
-  mkdirSync('public/icons', { recursive: true });
+  mkdirSync("public/icons", { recursive: true });
 
   for (const size of sizes) {
     const svg = createSvgIcon(size);
-    await sharp(svg)
-      .png()
-      .toFile(`public/icons/icon${size}.png`);
+    await sharp(svg).png().toFile(`public/icons/icon${size}.png`);
     console.log(`Generated icon${size}.png`);
   }
 
-  console.log('\nAll icons generated successfully!');
+  console.log("\nAll icons generated successfully!");
 }
 
 generateIcons().catch(console.error);

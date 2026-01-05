@@ -1,6 +1,6 @@
-import browser from 'webextension-polyfill';
-import type { Settings, Message, YouTubeView } from '../types';
-import { DEFAULT_SETTINGS } from '../types';
+import browser from "webextension-polyfill";
+import type { Settings, Message, YouTubeView } from "../types";
+import { DEFAULT_SETTINGS } from "../types";
 
 let currentSettings: Settings = DEFAULT_SETTINGS;
 let currentView: YouTubeView | null = null;
@@ -12,42 +12,42 @@ function getCurrentView(): YouTubeView | null {
   const searchParams = url.searchParams;
 
   // Watch page (suggestions sidebar)
-  if (pathname === '/watch') {
-    return 'suggestions';
+  if (pathname === "/watch") {
+    return "suggestions";
   }
 
   // Home page
-  if (pathname === '/' || pathname === '') {
-    return 'home';
+  if (pathname === "/" || pathname === "") {
+    return "home";
   }
 
   // Subscriptions
-  if (pathname === '/feed/subscriptions') {
-    return 'subscriptions';
+  if (pathname === "/feed/subscriptions") {
+    return "subscriptions";
   }
 
   // Playlists
-  if (pathname === '/playlist') {
-    const listId = searchParams.get('list');
-    if (listId === 'WL') {
-      return 'watchLater';
+  if (pathname === "/playlist") {
+    const listId = searchParams.get("list");
+    if (listId === "WL") {
+      return "watchLater";
     }
-    return 'playlists';
+    return "playlists";
   }
 
   // Search results
-  if (pathname === '/results') {
-    return 'search';
+  if (pathname === "/results") {
+    return "search";
   }
 
   // Channel pages (multiple URL patterns)
   if (
-    pathname.startsWith('/@') ||
-    pathname.startsWith('/channel/') ||
-    pathname.startsWith('/c/') ||
-    pathname.startsWith('/user/')
+    pathname.startsWith("/@") ||
+    pathname.startsWith("/channel/") ||
+    pathname.startsWith("/c/") ||
+    pathname.startsWith("/user/")
   ) {
-    return 'channel';
+    return "channel";
   }
 
   // Unknown view - don't hide anything
@@ -56,15 +56,16 @@ function getCurrentView(): YouTubeView | null {
 
 // Load initial settings
 async function loadSettings() {
-  const result = await browser.storage.local.get('settings');
-  currentSettings = (result.settings as Settings | undefined) ?? DEFAULT_SETTINGS;
+  const result = await browser.storage.local.get("settings");
+  currentSettings =
+    (result.settings as Settings | undefined) ?? DEFAULT_SETTINGS;
   processVideos();
 }
 
 // Listen for settings updates from background script
 browser.runtime.onMessage.addListener((message: unknown) => {
   const msg = message as Message;
-  if (msg.type === 'SETTINGS_UPDATED') {
+  if (msg.type === "SETTINGS_UPDATED") {
     currentSettings = msg.settings;
     processVideos();
   }
@@ -74,20 +75,20 @@ browser.runtime.onMessage.addListener((message: unknown) => {
 function getWatchProgress(videoElement: Element): number | null {
   // Try the newer class-based progress bar (home page, suggestions, etc.)
   const newProgressBar = videoElement.querySelector(
-    '.ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment'
+    ".ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment",
   );
   if (newProgressBar instanceof HTMLElement) {
     const widthStyle = newProgressBar.style.width;
-    if (widthStyle && widthStyle.endsWith('%')) {
+    if (widthStyle && widthStyle.endsWith("%")) {
       return parseFloat(widthStyle);
     }
   }
 
   // Try the older ID-based progress bar (playlists, watch later, etc.)
-  const oldProgressBar = videoElement.querySelector('#progress');
+  const oldProgressBar = videoElement.querySelector("#progress");
   if (oldProgressBar instanceof HTMLElement) {
     const widthStyle = oldProgressBar.style.width;
-    if (widthStyle && widthStyle.endsWith('%')) {
+    if (widthStyle && widthStyle.endsWith("%")) {
       return parseFloat(widthStyle);
     }
   }
@@ -99,12 +100,12 @@ function getWatchProgress(videoElement: Element): number | null {
 function processVideos() {
   // Find all video renderers (works for home, search, subscriptions, playlists, etc.)
   const videoSelectors = [
-    'ytd-rich-item-renderer', // Home, subscriptions (grid)
-    'ytd-video-renderer', // Search, channel videos
-    'ytd-grid-video-renderer', // Channel grid
-    'ytd-compact-video-renderer', // Old sidebar recommendations
-    'ytd-playlist-video-renderer', // Playlists, Watch Later
-    'yt-lockup-view-model', // New suggestions sidebar, home page
+    "ytd-rich-item-renderer", // Home, subscriptions (grid)
+    "ytd-video-renderer", // Search, channel videos
+    "ytd-grid-video-renderer", // Channel grid
+    "ytd-compact-video-renderer", // Old sidebar recommendations
+    "ytd-playlist-video-renderer", // Playlists, Watch Later
+    "yt-lockup-view-model", // New suggestions sidebar, home page
   ];
 
   for (const selector of videoSelectors) {
@@ -125,7 +126,7 @@ function processVideo(videoElement: HTMLElement) {
     progress !== null &&
     progress >= currentSettings.watchThreshold;
 
-  videoElement.style.display = shouldHide ? 'none' : '';
+  videoElement.style.display = shouldHide ? "none" : "";
 }
 
 // Set up MutationObserver to handle dynamically loaded content
@@ -158,15 +159,15 @@ function init() {
   });
 
   // Also listen for YouTube's navigation events (SPA navigation)
-  window.addEventListener('yt-navigate-finish', () => {
+  window.addEventListener("yt-navigate-finish", () => {
     currentView = getCurrentView();
     processVideos();
   });
 }
 
 // Initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
 } else {
   init();
 }

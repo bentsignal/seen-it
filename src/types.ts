@@ -1,11 +1,11 @@
 export type YouTubeView =
-  | 'home'
-  | 'subscriptions'
-  | 'watchLater'
-  | 'playlists'
-  | 'search'
-  | 'channel'
-  | 'suggestions';
+  | "home"
+  | "subscriptions"
+  | "watchLater"
+  | "playlists"
+  | "search"
+  | "channel"
+  | "suggestions";
 
 export interface ViewSettings {
   home: boolean;
@@ -32,10 +32,10 @@ export const DEFAULT_SETTINGS: Settings = {
     channel: false,
     suggestions: false,
   },
-  watchThreshold: 50,
+  watchThreshold: 80,
 };
 
 export interface Message {
-  type: 'SETTINGS_UPDATED';
+  type: "SETTINGS_UPDATED";
   settings: Settings;
 }
