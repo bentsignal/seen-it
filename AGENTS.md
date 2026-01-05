@@ -10,134 +10,178 @@ Seen It is a Chrome/Firefox browser extension built with React 19, TypeScript, a
 # Install dependencies
 bun install
 
-# Start development server with hot reloading (HMR on port 5173)
-bun dev
+# Development with hot reloading (HMR on port 5173)
+bun dev                    # Chrome (default)
+bun dev:chrome             # Chrome explicitly
+bun dev:firefox            # Firefox
 
-# Build production extension for Chrome (outputs to dist/)
-bun run build
+# Production builds (outputs to dist/)
+bun run build              # Both Chrome and Firefox
+bun run build:chrome       # Chrome only
+bun run build:firefox      # Firefox only
 
-# Build production extension for Firefox
-bun run build:firefox
+# Linting (uses oxlint, NOT ESLint)
+bun run lint               # Check for issues
+bun run lint:fix           # Auto-fix issues
 
-# Preview built extension
-bun run preview
+# Formatting (Prettier)
+bun run format             # Format all src/ files
+bun run format:check       # Check formatting without changes
 
-# Run linting (ESLint)
-bun run lint
-
-# Generate extension icons from SVG to PNG
-bun run icons
+# Other commands
+bun run preview            # Preview built extension
+bun run icons              # Generate PNG icons from SVG
 ```
 
-**Note:** This project has no test framework configured. If adding tests, prefer Vitest (aligned with Vite) and use `.test.ts` / `.test.tsx` file naming.
+**Testing:** No test framework is configured. If adding tests:
+- Install Vitest: `bun add -D vitest`
+- Use `.test.ts` / `.test.tsx` naming convention
+- Run single test: `bun vitest run --testNamePattern="test name"`
 
 ## Code Style Guidelines
 
 ### TypeScript Conventions
 
-- Enable `strict: true` in TypeScript config - all types must be explicit
-- Use `interface` for object shapes (e.g., `Settings`, `Message` interfaces)
-- Use `type` for unions, intersections, or primitives only
-- Enable `noUnusedLocals: true` and `noUnusedParameters: true`
-- Export interfaces and constants separately for better tree-shaking
-- Use explicit return types on exported async functions
+- **Strict mode enabled** - all types must be explicit
+- Use `interface` for object shapes (Settings, Message, ViewSettings)
+- Use `type` for unions only (e.g., `type YouTubeView = "home" | "subscriptions"`)
+- Explicit return types on exported async functions
+- Use `type` imports: `import type { Settings } from './types'`
+- Cast unknown values with type guards: `(result.settings as Settings | undefined) ?? DEFAULT_SETTINGS`
 
 ```typescript
-// Good
+// Types go in src/types.ts
 export interface Settings {
-  hideEnabled: boolean;
+  viewSettings: ViewSettings;
   watchThreshold: number;
 }
 
+// Explicit return types on async functions
 export async function getSettings(): Promise<Settings> {
-  const result = await browser.storage.local.get('settings');
-  return result.settings ?? DEFAULT_SETTINGS;
+  const result = await browser.storage.local.get("settings");
+  return (result.settings as Settings | undefined) ?? DEFAULT_SETTINGS;
 }
 ```
 
-### React Patterns
-
-- Use functional components with hooks (`useState`, `useEffect`, etc.)
-- Name components with PascalCase: `function App() {}`
-- Use explicit types for props if component is reusable
-- Default exports for page-level components, named exports for utilities
-- Use React.StrictMode in development (wrap root in StrictMode)
-
 ### Import Organization
 
-Organize imports in this order with blank lines between groups:
+Group imports in this order (no blank lines between groups in this codebase):
 
-1. External packages (React, libraries)
+1. React and external packages
 2. webextension-polyfill
-3. Internal relative imports (types, storage, components)
+3. Type imports (using `import type`)
+4. Value imports from local modules
 
 ```typescript
-import { useEffect, useState } from 'react';
-import browser from 'webextension-polyfill';
-import { Settings, DEFAULT_SETTINGS } from './types';
-import { getSettings, saveSettings } from './storage';
+import { useEffect, useState } from "react";
+import browser from "webextension-polyfill";
+import type { Settings, ViewSettings } from "./types";
+import { DEFAULT_SETTINGS } from "./types";
+import { getSettings, saveSettings } from "./storage";
 ```
 
 ### Naming Conventions
 
-- **Files:** kebab-case for utilities (`generate-icons.ts`), PascalCase for components (`App.tsx`)
-- **Variables/functions:** camelCase (`handleToggle`, `currentSettings`)
-- **Constants:** UPPER_SNAKE_CASE for config constants, camelCase for values
-- **Interfaces/Types:** PascalCase (`Settings`, `Message`)
-- **Boolean props/variables:** Prefix with `is`, `has`, `can`, or similar (`hideEnabled`)
+- **Files:** PascalCase for components (`App.tsx`, `Switch.tsx`), lowercase for modules (`storage.ts`, `types.ts`)
+- **Variables/functions:** camelCase (`handleToggle`, `currentSettings`, `processVideos`)
+- **Constants:** UPPER_SNAKE_CASE (`DEFAULT_SETTINGS`, `VIEW_LABELS`, `VIEW_ORDER`)
+- **Interfaces/Types:** PascalCase (`Settings`, `Message`, `YouTubeView`)
+- **React handlers:** Prefix with `handle` (`handleViewToggle`, `handleThresholdChange`)
+
+### React Patterns
+
+- Functional components with hooks only
+- Default exports for page components (`App.tsx`), named exports for reusable components
+- Use `React.StrictMode` wrapper in `main.tsx`
+- Define prop interfaces inline above component when simple
+
+```typescript
+interface SwitchProps {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+}
+
+export function Switch({ checked, onChange, label }: SwitchProps) { ... }
+```
 
 ### Error Handling
 
-- Use `.catch()` with empty callback only for non-critical errors
-- Always add a comment explaining why the error can be safely ignored
-- For critical errors, log to console with context or throw
-- In content scripts, silently handle errors that occur during YouTube DOM manipulation
+- Empty `.catch()` only for non-critical errors - always add explanatory comment
+- Content scripts: silently handle DOM manipulation errors
+- Use optional chaining for potentially undefined values
 
 ```typescript
-// Good - non-critical error with explanation
 browser.tabs.sendMessage(tab.id, message).catch(() => {
   // Tab might not have content script loaded yet
 });
 ```
 
-### Formatting & Style
+### Formatting (Prettier)
 
-- Use single quotes for strings (`'react'`, `'./types'`)
-- Add blank line after import groups
-- Use trailing commas in multi-line objects/arrays
-- Add inline comments to explain non-obvious logic (DOM selectors, YouTube-specific code)
-- Use descriptive variable names that indicate purpose
+- **Double quotes** for strings (not single quotes)
+- Trailing commas in multi-line structures
+- 2-space indentation
+- No semicolon enforcement (Prettier default)
 
-### Browser Extension Specifics
+### Browser Extension Architecture
 
-- Use `webextension-polyfill` for all browser API calls (not `chrome.*` directly)
-- Keep content scripts minimal - they inject into YouTube pages
-- Background service worker handles storage initialization and cross-tab communication
-- Use `browser.runtime.onMessage` for content/background communication
-- Use `browser.storage.local` for settings persistence
+- **Content script** (`src/content/index.ts`): Injected into YouTube pages, handles DOM manipulation
+- **Background script** (`src/background/index.ts`): Service worker for storage init and cross-tab messaging
+- **Popup** (`src/App.tsx`): React UI for user settings
+- Use `webextension-polyfill` for all browser APIs (never raw `chrome.*`)
+- Message passing: `browser.runtime.onMessage` / `browser.tabs.sendMessage`
+- Storage: `browser.storage.local` for persistence
 
 ## Project Structure
 
 ```
 src/
-  main.tsx          # React app entry point
-  App.tsx           # Popup UI component
-  index.css         # Tailwind imports + popup sizing
-  types.ts          # TypeScript interfaces
-  storage.ts        # Storage utilities
-  content/          # Content script (injected into YouTube)
-  background/       # Service worker (MV3)
-scripts/
-  generate-icons.ts # Icon generation script
-dist/               # Build output
-public/icons/       # Extension icons (PNG)
+  main.tsx              # React entry point
+  App.tsx               # Popup UI (default export)
+  index.css             # Tailwind imports + popup sizing
+  types.ts              # Shared TypeScript interfaces/types
+  storage.ts            # Storage helper functions
+  components/
+    Switch.tsx          # Reusable toggle component (named export)
+  content/
+    index.ts            # Content script (YouTube DOM manipulation)
+  background/
+    index.ts            # Service worker (MV3)
+  scripts/
+    generate-icons.ts   # Icon generation utility
+public/
+  icons/                # Extension icons (PNG)
+vite.config.base.ts     # Shared Vite configuration
+vite.config.chrome.ts   # Chrome-specific build config
+vite.config.firefox.ts  # Firefox-specific build config
+manifest.json           # Base extension manifest
+dist/                   # Build output (gitignored)
 ```
 
-## Testing Guidance
+## Key Implementation Details
 
-If adding tests:
-- Use Vitest (integrates with Vite): `bun add -D vitest`
-- Place tests alongside source files: `src/components/App.test.tsx`
-- Mock `webextension-polyfill` in tests
-- Test content script logic by mocking YouTube DOM structure
-- Run single test: `bun vitest run --testNamePattern="test name"`
+### YouTube View Detection (`src/content/index.ts`)
+
+The content script detects YouTube views by URL pattern:
+- `/` or empty → home
+- `/feed/subscriptions` → subscriptions
+- `/playlist?list=WL` → watchLater
+- `/playlist` → playlists
+- `/results` → search
+- `/@*`, `/channel/*`, `/c/*`, `/user/*` → channel
+- `/watch` → suggestions (sidebar)
+
+### Video Element Selectors
+
+Multiple selectors for different YouTube layouts:
+- `ytd-rich-item-renderer` - Home, subscriptions grid
+- `ytd-video-renderer` - Search, channel videos
+- `ytd-playlist-video-renderer` - Playlists
+- `yt-lockup-view-model` - New suggestions/home
+
+### Progress Bar Detection
+
+Two methods for reading watch progress:
+1. `.ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment` (newer)
+2. `#progress` (older playlists/watch later)
