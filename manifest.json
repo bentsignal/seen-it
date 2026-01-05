@@ -25,9 +25,5 @@
       "matches": ["https://www.youtube.com/*"],
       "js": ["src/content/index.ts"]
     }
-  ],
-  "background": {
-    "service_worker": "src/background/index.ts",
-    "type": "module"
-  }
+  ]
 }

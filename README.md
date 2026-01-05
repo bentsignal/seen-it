@@ -11,13 +11,11 @@ A browser extension that allows you to hide YouTube videos you've already watche
 ### Setup
 
 ```bash
-# Install dependencies
 bun install
 
-# Generate icons (only needed once or after changing icon design)
+# only needed once or after changing icon design
 bun run icons
 
-# Start development server with hot reloading
 bun run build
 ```
 
@@ -30,4 +28,9 @@ bun run build
 3. Click "Load unpacked"
 4. Select the `dist` folder in this project
 
-The extension will automatically reload when you make changes.
+#### Firefox
+
+1. Open `about:debugging`
+2. Go to "This Firefox"
+3. Click "Load temporary addon"
+4. Select the `manifest.json` file inside `dist/firefox`
