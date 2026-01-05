@@ -3,10 +3,13 @@ import { Settings, DEFAULT_SETTINGS, Message } from '../types';
 
 let currentSettings: Settings = DEFAULT_SETTINGS;
 
+console.log('[Seen It] Content script loaded');
+
 // Load initial settings
 async function loadSettings() {
   const result = await browser.storage.local.get('settings');
   currentSettings = result.settings ?? DEFAULT_SETTINGS;
+  console.log('[Seen It] Settings loaded:', currentSettings);
   processVideos();
 }
 
@@ -33,12 +36,13 @@ function getWatchProgress(videoElement: Element): number | null {
 
 // Process all video elements on the page
 function processVideos() {
-  // Find all video renderers (works for home, search, subscriptions, etc.)
+  // Find all video renderers (works for home, search, subscriptions, playlists, etc.)
   const videoSelectors = [
     'ytd-rich-item-renderer',
     'ytd-video-renderer',
     'ytd-grid-video-renderer',
     'ytd-compact-video-renderer',
+    'ytd-playlist-video-renderer',
   ];
 
   for (const selector of videoSelectors) {
@@ -52,8 +56,13 @@ function processVideos() {
 function processVideo(videoElement: HTMLElement) {
   const progress = getWatchProgress(videoElement);
 
+  if (progress !== null) {
+    console.log('[Seen It] Video progress:', progress, '%, threshold:', currentSettings.watchThreshold, '%');
+  }
+
   if (currentSettings.hideEnabled && progress !== null && progress >= currentSettings.watchThreshold) {
     videoElement.style.display = 'none';
+    console.log('[Seen It] Hiding video with', progress, '% progress');
   } else {
     videoElement.style.display = '';
   }
