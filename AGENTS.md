@@ -30,10 +30,10 @@ bun run format:check       # Check formatting without changes
 
 # Other commands
 bun run preview            # Preview built extension
-bun run icons              # Generate PNG icons from SVG
 ```
 
 **Testing:** No test framework is configured. If adding tests:
+
 - Install Vitest: `bun add -D vitest`
 - Use `.test.ts` / `.test.tsx` naming convention
 - Run single test: `bun vitest run --testNamePattern="test name"`
@@ -148,8 +148,6 @@ src/
     index.ts            # Content script (YouTube DOM manipulation)
   background/
     index.ts            # Service worker (MV3)
-  scripts/
-    generate-icons.ts   # Icon generation utility
 public/
   icons/                # Extension icons (PNG)
 vite.config.base.ts     # Shared Vite configuration
@@ -164,6 +162,7 @@ dist/                   # Build output (gitignored)
 ### YouTube View Detection (`src/content/index.ts`)
 
 The content script detects YouTube views by URL pattern:
+
 - `/` or empty → home
 - `/feed/subscriptions` → subscriptions
 - `/playlist?list=WL` → watchLater
@@ -175,6 +174,7 @@ The content script detects YouTube views by URL pattern:
 ### Video Element Selectors
 
 Multiple selectors for different YouTube layouts:
+
 - `ytd-rich-item-renderer` - Home, subscriptions grid
 - `ytd-video-renderer` - Search, channel videos
 - `ytd-playlist-video-renderer` - Playlists
@@ -183,5 +183,6 @@ Multiple selectors for different YouTube layouts:
 ### Progress Bar Detection
 
 Two methods for reading watch progress:
+
 1. `.ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment` (newer)
 2. `#progress` (older playlists/watch later)

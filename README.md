@@ -1,8 +1,13 @@
-# Seen It
+<p align="center">
+  <img src="public/icons/icon-no-padding.png" alt="Convex Env Example" style="max-width: 200px; width: 100%;">
+</p>
 
-A browser extension that allows you to hide YouTube videos you've already watched.
+<h3 align="center">Seen It</h2>
+<p align="center">A browser extension that allows you to hide YouTube videos you've already watched.</p>
 
-## Features
+---
+
+### Features
 
 - Toggle to show/hide previously watched videos
 - Adjustable watch percentage threshold (0-100%)
@@ -12,10 +17,9 @@ A browser extension that allows you to hide YouTube videos you've already watche
 
 ```bash
 bun install
+```
 
-# only needed once or after changing icon design
-bun run icons
-
+```bash
 bun run build
 ```
 
