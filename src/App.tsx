@@ -111,7 +111,7 @@ function App() {
         <div className="flex gap-2">
           <button
             onClick={handleEnableAll}
-            className="flex-1 py-1.5 px-3 text-sm rounded-md font-medium transition-colors bg-blue-500 hover:bg-blue-600 text-white"
+            className="flex-1 py-1.5 px-3 text-sm rounded-md font-medium transition-colors bg-red-500 hover:bg-red-600 text-white"
           >
             Hide All
           </button>
@@ -150,7 +150,7 @@ function App() {
             max="100"
             value={settings.watchThreshold}
             onChange={handleThresholdChange}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-500"
+            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-red-500"
           />
           <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
             <span>0%</span>
