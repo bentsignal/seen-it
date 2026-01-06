@@ -14,7 +14,7 @@
 - Works on YouTube home, search, subscriptions, and channel pages
   <br />
   <br />
-  <img src="public/menu.png" width="200px"/>
+  <img src="public/menu.png" width="300px"/>
 
 ### Setup
 
