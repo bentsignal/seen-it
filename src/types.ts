@@ -24,15 +24,15 @@ export interface Settings {
 
 export const DEFAULT_SETTINGS: Settings = {
   viewSettings: {
-    home: false,
-    subscriptions: false,
-    watchLater: false,
+    home: true,
+    subscriptions: true,
+    watchLater: true,
     playlists: false,
     search: false,
     channel: false,
-    suggestions: false,
+    suggestions: true,
   },
-  watchThreshold: 80,
+  watchThreshold: 70,
 };
 
 export interface Message {
