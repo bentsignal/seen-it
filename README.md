@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/icons/icon-no-padding.png" alt="Convex Env Example" style="max-width: 200px; width: 100%;">
+  <img src="public/icons/icon-no-padding.png" alt="Convex Env Example" style="max-width: 200px; width: 100%; margin-x: 100px;">
 </p>
 
 <h3 align="center">Seen It</h2>
