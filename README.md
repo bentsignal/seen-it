@@ -33,7 +33,7 @@ bun run build
 1. Open `chrome://extensions/`
 2. Enable "Developer mode" (toggle in top right)
 3. Click "Load unpacked"
-4. Select the `dist/chrome`
+4. Select `dist/chrome`
 
 #### Firefox
 
