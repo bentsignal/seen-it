@@ -86,7 +86,7 @@ function App() {
   };
 
   const handleThresholdChange = async (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const newSettings: Settings = {
       ...settings,
@@ -106,10 +106,6 @@ function App() {
 
   return (
     <div className="p-4 bg-white dark:bg-gray-900 min-h-[380px]">
-      <h1 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
-        Seen It
-      </h1>
-
       <div className="space-y-4">
         {/* Enable/Disable All Buttons */}
         <div className="flex gap-2">
@@ -117,13 +113,13 @@ function App() {
             onClick={handleEnableAll}
             className="flex-1 py-1.5 px-3 text-sm rounded-md font-medium transition-colors bg-blue-500 hover:bg-blue-600 text-white"
           >
-            Enable All
+            Hide All
           </button>
           <button
             onClick={handleDisableAll}
             className="flex-1 py-1.5 px-3 text-sm rounded-md font-medium transition-colors bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
           >
-            Disable All
+            Show All
           </button>
         </div>
 
@@ -145,7 +141,8 @@ function App() {
         {/* Threshold Slider */}
         <div className="space-y-2 pt-2 border-t border-gray-200 dark:border-gray-700">
           <label className="block text-sm text-gray-700 dark:text-gray-300">
-            Hide videos seen at least {settings.watchThreshold}%
+            Hide a video if you've watched at least {settings.watchThreshold}%
+            of it
           </label>
           <input
             type="range"

@@ -10,7 +10,7 @@
 ### Features
 
 - Toggle to show/hide previously watched videos
-- Adjustable watch percentage threshold (0-100%)
+- Adjustable watch percentage threshold (Hide a video if you've watched at least `x`% of it)
 - Works on YouTube home, search, subscriptions, and channel pages
 
 ### Setup
@@ -30,7 +30,7 @@ bun run build
 1. Open `chrome://extensions/`
 2. Enable "Developer mode" (toggle in top right)
 3. Click "Load unpacked"
-4. Select the `dist` folder in this project
+4. Select the `dist/chrome`
 
 #### Firefox
 
