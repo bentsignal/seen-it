@@ -12,6 +12,9 @@
 - Toggle to show/hide previously watched videos
 - Adjustable watch percentage threshold (Hide a video if you've watched at least `x`% of it)
 - Works on YouTube home, search, subscriptions, and channel pages
+  <br />
+  <br />
+  <img src="public/menu.png" width="200px"/>
 
 ### Setup
 
