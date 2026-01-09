@@ -7,6 +7,11 @@
 
 ---
 
+### Download
+
+- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/seen-it/)
+- Chrome (awaiting approval)
+
 ### Features
 
 - Toggle to show/hide previously watched videos
