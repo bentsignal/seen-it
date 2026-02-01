@@ -10,7 +10,7 @@
 ### Download
 
 - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/seen-it/)
-- Chrome (awaiting approval)
+- [Chrome](https://chromewebstore.google.com/detail/seen-it-hide-watched-yout/gafnlaaomlcmamggjoplnephgfaclddi?authuser=0&hl=en)
 
 ### Features
 
